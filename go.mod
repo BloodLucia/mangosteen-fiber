@@ -4,6 +4,7 @@ go 1.21.3
 
 require (
 	github.com/andybalholm/brotli v1.0.6 // indirect
+	github.com/go-sql-driver/mysql v1.7.1 // indirect
 	github.com/goccy/go-json v0.8.1 // indirect
 	github.com/gofiber/fiber/v2 v2.50.0 // indirect
 	github.com/golang/snappy v0.0.4 // indirect
