@@ -1,9 +1,31 @@
 package main
 
 import (
+	"context"
+	_ "github.com/go-sql-driver/mysql"
 	"github.com/gofiber/fiber/v2"
 	"log"
+	"xorm.io/xorm"
 )
+
+var DB *xorm.Engine
+
+func init() {
+	db, err := xorm.NewEngine("mysql", "")
+	if err != nil {
+		log.Fatalf("Unable to use xorm for NewEngine err: %s \n", err)
+	}
+	if err := db.PingContext(context.TODO()); err != nil {
+		log.Fatalf("Failed to connect database err: %s \n", err)
+	}
+
+	DB = db
+	defer func() {
+		if err := db.Close(); err != nil {
+			log.Fatalf("Failed to close database err: %s \n", err)
+		}
+	}()
+}
 
 func main() {
 	app := fiber.New()
