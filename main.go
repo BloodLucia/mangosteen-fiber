@@ -13,16 +13,16 @@ var DB *xorm.Engine
 func init() {
 	db, err := xorm.NewEngine("mysql", "")
 	if err != nil {
-		log.Fatalf("Unable to use xorm for NewEngine err: %s \n", err)
+		log.Fatalf("Failed to use NewEngine with xorm: %s \n", err)
 	}
 	if err := db.PingContext(context.TODO()); err != nil {
-		log.Fatalf("Failed to connect database err: %s \n", err)
+		log.Fatalf("Failed to connect database: %s \n", err)
 	}
 
 	DB = db
 	defer func() {
 		if err := db.Close(); err != nil {
-			log.Fatalf("Failed to close database err: %s \n", err)
+			log.Fatalf("Failed to close database: %s \n", err)
 		}
 	}()
 }
