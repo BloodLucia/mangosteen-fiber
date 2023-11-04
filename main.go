@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/gofiber/fiber/v2"
 	"log"
@@ -11,7 +12,15 @@ import (
 var DB *xorm.Engine
 
 func init() {
-	db, err := xorm.NewEngine("mysql", "")
+	dsn := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=utf8mb4&parseTime=True&loc=Local&collation=utf8mb4_unicode_ci",
+		"root",
+		"123456",
+		"127.0.0.1",
+		3306,
+		"bookkeeping_dev",
+	)
+
+	db, err := xorm.NewEngine("mysql", dsn)
 	if err != nil {
 		log.Fatalf("Failed to use NewEngine with xorm: %s \n", err)
 	}
