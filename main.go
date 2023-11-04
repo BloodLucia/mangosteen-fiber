@@ -11,6 +11,10 @@ import (
 
 var DB *xorm.Engine
 
+type VerificationCodeIn struct {
+	Email string `json:"email"`
+}
+
 func init() {
 	dsn := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=utf8mb4&parseTime=True&loc=Local&collation=utf8mb4_unicode_ci",
 		"root",
@@ -41,6 +45,15 @@ func main() {
 
 	app.Get("", func(ctx *fiber.Ctx) error {
 		return ctx.SendString("Hello World!")
+	})
+
+	app.Post("/sendVerificationCode", func(ctx *fiber.Ctx) error {
+		var body VerificationCodeIn
+		if err := ctx.BodyParser(&body); err != nil {
+			return ctx.SendString(err.Error())
+		}
+
+		return ctx.SendString(fmt.Sprintf("Your Verification Code is"))
 	})
 
 	if err := app.Listen(":3000"); err != nil {
