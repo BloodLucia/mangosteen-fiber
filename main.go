@@ -5,7 +5,10 @@ import (
 	"fmt"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/gofiber/fiber/v2"
+	emailPKG "github.com/jordan-wright/email"
 	"log"
+	"net/http"
+	"net/smtp"
 	"xorm.io/xorm"
 )
 
@@ -13,6 +16,21 @@ var DB *xorm.Engine
 
 type VerificationCodeIn struct {
 	Email string `json:"email"`
+}
+
+type From struct {
+	Address string
+	Name    string
+}
+
+type EmailOptions struct {
+	From    From
+	To      []string
+	Bcc     []string
+	Cc      []string
+	Subject string
+	Text    []byte // Plaintext message (optional)
+	HTML    []byte // Html message (optional)
 }
 
 func init() {
@@ -40,6 +58,28 @@ func init() {
 	}()
 }
 
+func MailSendCode(mail, code string) error {
+	e := emailPKG.NewEmail()
+	e.From = "kalougata@111.com"
+	e.To = []string{mail}
+	e.Subject = "邮箱验证码"
+	e.HTML = []byte("您的验证码为：<h1>" + code + "</h1>")
+	err := e.Send(
+		"smtp.111.com:25",
+		smtp.PlainAuth(
+			"",
+			"",
+			"",
+			"smtp.111.com",
+		),
+	)
+	if err != nil {
+		fmt.Println(err)
+		return err
+	}
+	return nil
+}
+
 func main() {
 	app := fiber.New()
 
@@ -53,7 +93,12 @@ func main() {
 			return ctx.SendString(err.Error())
 		}
 
-		return ctx.SendString(fmt.Sprintf("Your Verification Code is"))
+		if err := MailSendCode(body.Email, "123456"); err != nil {
+			ctx.SendStatus(http.StatusInternalServerError)
+			return ctx.SendString("发送邮箱验证码失败")
+		}
+
+		return ctx.SendString("ok!")
 	})
 
 	if err := app.Listen(":3000"); err != nil {
