@@ -4,10 +4,10 @@ import (
 	"context"
 	"fmt"
 	_ "github.com/go-sql-driver/mysql"
-	"github.com/gofiber/fiber/v2"
 	emailPKG "github.com/jordan-wright/email"
+	"github.com/kalougata/bookkeeping/cmd/wire"
+	"github.com/kalougata/bookkeeping/pkg/http"
 	"log"
-	"net/http"
 	"net/smtp"
 	"xorm.io/xorm"
 )
@@ -81,27 +81,13 @@ func MailSendCode(mail, code string) error {
 }
 
 func main() {
-	app := fiber.New()
+	server, cleanup, err := wire.NewApp()
 
-	app.Get("", func(ctx *fiber.Ctx) error {
-		return ctx.SendString("Hello World!")
-	})
-
-	app.Post("/sendVerificationCode", func(ctx *fiber.Ctx) error {
-		var body VerificationCodeIn
-		if err := ctx.BodyParser(&body); err != nil {
-			return ctx.SendString(err.Error())
-		}
-
-		if err := MailSendCode(body.Email, "123456"); err != nil {
-			ctx.SendStatus(http.StatusInternalServerError)
-			return ctx.SendString("发送邮箱验证码失败")
-		}
-
-		return ctx.SendString("ok!")
-	})
-
-	if err := app.Listen(":3000"); err != nil {
-		log.Fatalf("Failed to listen Serve err: %s \n", err)
+	if err != nil {
+		log.Panicln(err)
 	}
+
+	http.Run(server.ServerHTTP, ":8888")
+
+	defer cleanup()
 }
