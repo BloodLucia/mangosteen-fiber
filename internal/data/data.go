@@ -59,6 +59,10 @@ func newRedis() (*redis.Client, error) {
 		DB:       0,
 	})
 
+	if err := db.Ping(context.TODO()).Err(); err != nil {
+		log.Fatalf("Failed to connect redis client %s", err)
+	}
+
 	if err := db.Ping(context.Background()).Err(); err != nil {
 		return nil, err
 	}
