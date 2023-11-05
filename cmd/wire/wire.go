@@ -15,7 +15,9 @@ func NewApp() (*server.Server, func(), error) {
 	panic(wire.Build(
 		data.NewData,
 		service.NewUserService,
+		service.NewTagService,
 		controller.NewAuthController,
+		controller.NewTagController,
 		server.NewHTTPServer,
 		server.NewServer,
 	))

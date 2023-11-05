@@ -22,7 +22,9 @@ func NewApp() (*server.Server, func(), error) {
 	}
 	userService := service.NewUserService(dataData)
 	authController := controller.NewAuthController(userService)
-	app := server.NewHTTPServer(authController)
+	tagService := service.NewTagService(dataData)
+	tagController := controller.NewTagController(tagService)
+	app := server.NewHTTPServer(authController, tagController)
 	serverServer := server.NewServer(app)
 	return serverServer, func() {
 		cleanup()

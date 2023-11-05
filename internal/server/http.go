@@ -7,6 +7,7 @@ import (
 
 func NewHTTPServer(
 	authC *controller.AuthController,
+	tagC *controller.TagController,
 ) *fiber.App {
 	app := fiber.New()
 
