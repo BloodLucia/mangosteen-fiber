@@ -15,29 +15,8 @@ type Data struct {
 }
 
 func NewData(conf *config.Config) (*Data, func(), error) {
-	dsn := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=utf8mb4&parseTime=True&loc=Local&collation=utf8mb4_unicode_ci",
-		conf.DB.User,
-		conf.DB.Passwd,
-		conf.DB.Host,
-		conf.DB.Post,
-		conf.DB.DbName,
-	)
-
-	db, err := xorm.NewEngine(conf.DB.Driver, dsn)
-
-	if err != nil {
-		log.Fatalf("Failed to use NewEngine with xorm: %s \n", err)
-	}
-
-	if err := db.PingContext(context.Background()); err != nil {
-		log.Fatalf("Failed to connect database: %s \n", err)
-	}
-
-	cache, err := newRedis()
-	if err != nil {
-		log.Fatalf("Failed to connect redis client %s \n", err)
-	}
-
+	db := NewMysql(conf)
+	cache := NewRedis(conf)
 	data := &Data{
 		DB:    db,
 		Cache: cache,
@@ -53,20 +32,36 @@ func NewData(conf *config.Config) (*Data, func(), error) {
 	}, nil
 }
 
-func newRedis() (*redis.Client, error) {
+func NewMysql(conf *config.Config) *xorm.Engine {
+	dsn := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=utf8mb4&parseTime=True&loc=Local&collation=utf8mb4_unicode_ci",
+		conf.DB.User,
+		conf.DB.Passwd,
+		conf.DB.Host,
+		conf.DB.Post,
+		conf.DB.DbName,
+	)
+	db, err := xorm.NewEngine(conf.DB.Driver, dsn)
+	if err != nil {
+		log.Fatalf("Failed to use NewEngine with xorm: %s \n", err)
+	}
+	if err := db.PingContext(context.Background()); err != nil {
+		log.Fatalf("Failed to connect database: %s \n", err)
+	}
+
+	return db
+}
+
+func NewRedis(conf *config.Config) *redis.Client {
 	db := redis.NewClient(&redis.Options{
-		Addr:     "127.0.0.1:6379",
-		Username: "root",
-		DB:       0,
+		Addr:     fmt.Sprintf("%s:%d", conf.RDB.Host, conf.RDB.Port),
+		Username: conf.RDB.User,
+		Password: conf.RDB.Passwd,
+		DB:       conf.RDB.Db,
 	})
 
-	if err := db.Ping(context.TODO()).Err(); err != nil {
+	if err := db.Ping(context.Background()).Err(); err != nil {
 		log.Fatalf("Failed to connect redis client %s", err)
 	}
 
-	if err := db.Ping(context.Background()).Err(); err != nil {
-		return nil, err
-	}
-
-	return db, nil
+	return db
 }
