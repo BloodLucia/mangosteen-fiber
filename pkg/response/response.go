@@ -17,6 +17,7 @@ type response struct {
 	Success bool   `json:"success"`
 	Msg     string `json:"msg"`
 	Data    any    `json:"data"`
+	Errs    any    `json:"errs"`
 }
 
 func Handle(c *fiber.Ctx, err error, data any) error {
@@ -38,6 +39,7 @@ func Handle(c *fiber.Ctx, err error, data any) error {
 			Success: false,
 			Msg:     "Unknown Error",
 			Data:    nil,
+			Errs:    nil,
 		})
 	}
 
@@ -47,5 +49,6 @@ func Handle(c *fiber.Ctx, err error, data any) error {
 		Success: false,
 		Msg:     myErr.Msg,
 		Data:    data,
+		Errs:    myErr.Err,
 	})
 }
