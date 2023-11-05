@@ -10,6 +10,7 @@ import (
 	"github.com/kalougata/bookkeeping/internal/controller"
 	"github.com/kalougata/bookkeeping/internal/data"
 	"github.com/kalougata/bookkeeping/internal/server"
+	"github.com/kalougata/bookkeeping/internal/service"
 )
 
 // Injectors from wire.go:
@@ -19,7 +20,8 @@ func NewApp() (*server.Server, func(), error) {
 	if err != nil {
 		return nil, nil, err
 	}
-	authController := controller.NewAuthController(dataData)
+	userService := service.NewUserService(dataData)
+	authController := controller.NewAuthController(userService)
 	app := server.NewHTTPServer(authController)
 	serverServer := server.NewServer(app)
 	return serverServer, func() {

@@ -26,7 +26,7 @@ func NewData() (*Data, func(), error) {
 		log.Fatalf("Failed to use NewEngine with xorm: %s \n", err)
 	}
 
-	if err := db.PingContext(context.TODO()); err != nil {
+	if err := db.PingContext(context.Background()); err != nil {
 		log.Fatalf("Failed to connect database: %s \n", err)
 	}
 

@@ -2,12 +2,12 @@ package controller
 
 import (
 	"github.com/gofiber/fiber/v2"
-	"github.com/kalougata/bookkeeping/internal/data"
+	"github.com/kalougata/bookkeeping/internal/service"
 	"github.com/kalougata/bookkeeping/pkg/response"
 )
 
 type AuthController struct {
-	data *data.Data
+	srv *service.UserService
 }
 
 func (ac *AuthController) SignInWithEmail() fiber.Handler {
@@ -16,6 +16,6 @@ func (ac *AuthController) SignInWithEmail() fiber.Handler {
 	}
 }
 
-func NewAuthController(data *data.Data) *AuthController {
-	return &AuthController{data}
+func NewAuthController(srv *service.UserService) *AuthController {
+	return &AuthController{srv}
 }
