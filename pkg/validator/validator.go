@@ -8,10 +8,10 @@ import (
 
 func Checker(ctx *fiber.Ctx, data any) error {
 	if err := ctx.BodyParser(data); err != nil {
-		return e.ErrFormatJSON()
+		return e.ErrFormatJSON().WithErr(err)
 	}
 	if v := validate.Struct(data); !v.Validate() {
-		return e.ErrBadRequest().WithMsg(v.Errors.Error())
+		return e.ErrBadRequest().WithErr(v.Errors)
 	}
 
 	return nil
