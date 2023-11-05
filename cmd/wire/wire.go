@@ -16,8 +16,10 @@ func NewApp() (*server.Server, func(), error) {
 		data.NewData,
 		service.NewUserService,
 		service.NewTagService,
+		service.NewItemService,
 		controller.NewAuthController,
 		controller.NewTagController,
+		controller.NewItemController,
 		server.NewHTTPServer,
 		server.NewServer,
 	))
