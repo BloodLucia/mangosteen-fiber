@@ -7,11 +7,11 @@ import (
 )
 
 func Checker(ctx *fiber.Ctx, data any) error {
-	if err := ctx.BodyParser(&data); err != nil {
-		return e.ErrFormatJSON().WithErr(err)
+	if err := ctx.BodyParser(data); err != nil {
+		return e.ErrFormatJSON()
 	}
-	if v := validate.Struct(&data); !v.Validate() {
-		return e.ErrBadRequest().WithErr(v.Errors)
+	if v := validate.Struct(data); !v.Validate() {
+		return e.ErrBadRequest().WithMsg(v.Errors.Error())
 	}
 
 	return nil
