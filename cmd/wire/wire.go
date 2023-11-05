@@ -9,9 +9,10 @@ import (
 	"github.com/kalougata/bookkeeping/internal/data"
 	"github.com/kalougata/bookkeeping/internal/server"
 	"github.com/kalougata/bookkeeping/internal/service"
+	"github.com/kalougata/bookkeeping/pkg/config"
 )
 
-func NewApp() (*server.Server, func(), error) {
+func NewApp(conf *config.Config) (*server.Server, func(), error) {
 	panic(wire.Build(
 		data.NewData,
 		service.NewUserService,

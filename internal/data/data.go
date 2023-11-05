@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/gofiber/fiber/v2/log"
+	"github.com/kalougata/bookkeeping/pkg/config"
 	"github.com/redis/go-redis/v9"
 	"xorm.io/xorm"
 )
@@ -13,16 +14,16 @@ type Data struct {
 	Cache *redis.Client
 }
 
-func NewData() (*Data, func(), error) {
+func NewData(conf *config.Config) (*Data, func(), error) {
 	dsn := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=utf8mb4&parseTime=True&loc=Local&collation=utf8mb4_unicode_ci",
-		"root",
-		"123456",
-		"127.0.0.1",
-		3306,
-		"bookkeeping_dev",
+		conf.DB.User,
+		conf.DB.Passwd,
+		conf.DB.Host,
+		conf.DB.Post,
+		conf.DB.DbName,
 	)
 
-	db, err := xorm.NewEngine("mysql", dsn)
+	db, err := xorm.NewEngine(conf.DB.Driver, dsn)
 
 	if err != nil {
 		log.Fatalf("Failed to use NewEngine with xorm: %s \n", err)

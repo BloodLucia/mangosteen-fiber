@@ -11,12 +11,13 @@ import (
 	"github.com/kalougata/bookkeeping/internal/data"
 	"github.com/kalougata/bookkeeping/internal/server"
 	"github.com/kalougata/bookkeeping/internal/service"
+	"github.com/kalougata/bookkeeping/pkg/config"
 )
 
 // Injectors from wire.go:
 
-func NewApp() (*server.Server, func(), error) {
-	dataData, cleanup, err := data.NewData()
+func NewApp(conf *config.Config) (*server.Server, func(), error) {
+	dataData, cleanup, err := data.NewData(conf)
 	if err != nil {
 		return nil, nil, err
 	}

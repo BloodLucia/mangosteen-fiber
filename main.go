@@ -5,6 +5,7 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 	emailPKG "github.com/jordan-wright/email"
 	"github.com/kalougata/bookkeeping/cmd/wire"
+	"github.com/kalougata/bookkeeping/pkg/config"
 	"github.com/kalougata/bookkeeping/pkg/http"
 	"log"
 	"net/smtp"
@@ -33,7 +34,9 @@ func MailSendCode(mail, code string) error {
 }
 
 func main() {
-	server, cleanup, err := wire.NewApp()
+	conf := config.NewConfig()
+
+	server, cleanup, err := wire.NewApp(conf)
 
 	if err != nil {
 		log.Panicln(err)

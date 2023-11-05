@@ -6,11 +6,13 @@ import (
 )
 
 type Config struct {
-	DB *configs.Database
+	DB  *configs.Database
+	RDB *configs.Redis
 }
 
 func NewConfig() *Config {
 	return &Config{
-		DB: configs.DatabaseConfig(),
+		DB:  configs.DatabaseConfig(),
+		RDB: configs.RedisConfig(),
 	}
 }
