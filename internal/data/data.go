@@ -4,11 +4,13 @@ import (
 	"context"
 	"fmt"
 	"github.com/gofiber/fiber/v2/log"
+	"github.com/redis/go-redis/v9"
 	"xorm.io/xorm"
 )
 
 type Data struct {
-	DB *xorm.Engine
+	DB    *xorm.Engine
+	Cache *redis.Client
 }
 
 func NewData() (*Data, func(), error) {
@@ -30,13 +32,36 @@ func NewData() (*Data, func(), error) {
 		log.Fatalf("Failed to connect database: %s \n", err)
 	}
 
+	cache, err := newRedis()
+	if err != nil {
+		log.Fatalf("Failed to connect redis client %s \n", err)
+	}
+
 	data := &Data{
-		DB: db,
+		DB:    db,
+		Cache: cache,
 	}
 
 	return data, func() {
 		if err := db.Close(); err != nil {
 			log.Fatalf("Failed to close database: %s \n", err)
 		}
+		if err := cache.Close(); err != nil {
+			log.Fatalf("Failed to close redis client: %s \n", err)
+		}
 	}, nil
+}
+
+func newRedis() (*redis.Client, error) {
+	db := redis.NewClient(&redis.Options{
+		Addr:     "127.0.0.1:6379",
+		Username: "root",
+		DB:       0,
+	})
+
+	if err := db.Ping(context.Background()).Err(); err != nil {
+		return nil, err
+	}
+
+	return db, nil
 }
