@@ -10,6 +10,7 @@ type Tag struct {
 	Name      string
 	Type      string
 	Sign      string
+	UserId    uint64
 }
 
 func (u *Tag) TableName() string {
@@ -17,9 +18,10 @@ func (u *Tag) TableName() string {
 }
 
 type TagInReq struct {
-	Name string `json:"name"`
-	Type string `json:"type"`
-	Sign string `json:"sign"`
+	Name   string `json:"name"`
+	Type   string `json:"type"`
+	Sign   string `json:"sign"`
+	UserId uint64 `json:"-"`
 }
 
 func (u *TagInReq) ToModel() *Tag {
