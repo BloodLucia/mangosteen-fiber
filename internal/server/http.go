@@ -1,8 +1,13 @@
 package server
 
-import "github.com/gofiber/fiber/v2"
+import (
+	"github.com/gofiber/fiber/v2"
+	"github.com/kalougata/bookkeeping/internal/controller"
+)
 
-func NewHTTPServer() *fiber.App {
+func NewHTTPServer(
+	authC *controller.AuthController,
+) *fiber.App {
 	app := fiber.New()
 
 	app.Get("", func(ctx *fiber.Ctx) error {

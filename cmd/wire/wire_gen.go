@@ -7,14 +7,22 @@
 package wire
 
 import (
+	"github.com/kalougata/bookkeeping/internal/controller"
+	"github.com/kalougata/bookkeeping/internal/data"
 	"github.com/kalougata/bookkeeping/internal/server"
 )
 
 // Injectors from wire.go:
 
 func NewApp() (*server.Server, func(), error) {
-	app := server.NewHTTPServer()
+	dataData, cleanup, err := data.NewData()
+	if err != nil {
+		return nil, nil, err
+	}
+	authController := controller.NewAuthController(dataData)
+	app := server.NewHTTPServer(authController)
 	serverServer := server.NewServer(app)
 	return serverServer, func() {
+		cleanup()
 	}, nil
 }
