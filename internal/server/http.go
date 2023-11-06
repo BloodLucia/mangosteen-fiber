@@ -16,5 +16,7 @@ func NewHTTPServer(
 		return ctx.SendString("HelloWorld")
 	})
 
+	app.Post("/login", authC.SignInWithEmail())
+
 	return app
 }
