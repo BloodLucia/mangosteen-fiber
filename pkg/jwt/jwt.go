@@ -8,14 +8,16 @@ import (
 )
 
 type JWT struct {
-	key    []byte
-	issuer string
+	key     []byte
+	issuer  string
+	expires time.Duration
 }
 
 func New(conf *config.Config) *JWT {
 	return &JWT{
-		key:    []byte(conf.JWT.Key),
-		issuer: conf.JWT.Issuer,
+		key:     []byte(conf.JWT.Key),
+		issuer:  conf.JWT.Issuer,
+		expires: time.Duration(conf.JWT.Expires),
 	}
 }
 
@@ -25,11 +27,11 @@ type MyCustomClaims struct {
 	jwt.RegisteredClaims
 }
 
-func (j *JWT) BuildToken(claims MyCustomClaims, expiresAt time.Time) (string, error) {
+func (j *JWT) BuildToken(claims MyCustomClaims) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, MyCustomClaims{
 		UserId: claims.UserId,
 		RegisteredClaims: jwt.RegisteredClaims{
-			ExpiresAt: jwt.NewNumericDate(expiresAt),
+			ExpiresAt: jwt.NewNumericDate(time.Now().Add(j.expires * time.Minute)),
 			IssuedAt:  jwt.NewNumericDate(time.Now()),
 			NotBefore: jwt.NewNumericDate(time.Now()),
 			Issuer:    j.issuer,

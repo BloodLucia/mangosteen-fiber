@@ -1,10 +1,13 @@
 package configs
 
-import "github.com/kelseyhightower/envconfig"
+import (
+	"github.com/kelseyhightower/envconfig"
+)
 
 type JWT struct {
-	Key    string `required:"true"`
-	Issuer string `required:"true"`
+	Key     string `required:"true"`
+	Issuer  string `required:"true"`
+	Expires int64  `required:"true"`
 }
 
 func JWTConfig() *JWT {

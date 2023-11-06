@@ -8,7 +8,6 @@ import (
 	"github.com/kalougata/bookkeeping/pkg/e"
 	"github.com/kalougata/bookkeeping/pkg/jwt"
 	"log"
-	"time"
 )
 
 type UserService struct {
@@ -35,7 +34,7 @@ func (us *UserService) FindOrCreateWithEmail(ctx context.Context, req *model.Use
 	}
 
 	claims := jwt.MyCustomClaims{UserId: user.ID}
-	token, _ := us.jwt.BuildToken(claims, time.Now().Add(10*time.Minute))
+	token, _ := us.jwt.BuildToken(claims)
 	resp := &model.UserOutRes{
 		UserId: user.ID,
 		Email:  user.Email,
