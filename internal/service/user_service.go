@@ -5,10 +5,12 @@ import (
 	"github.com/kalougata/bookkeeping/internal/data"
 	"github.com/kalougata/bookkeeping/internal/model"
 	"github.com/kalougata/bookkeeping/pkg/e"
+	"github.com/kalougata/bookkeeping/pkg/jwt"
 )
 
 type UserService struct {
 	data *data.Data
+	jwt  *jwt.JWT
 }
 
 func (us *UserService) FindOrCreateWithEmail(ctx context.Context, req *model.UserInReq) error {
@@ -33,6 +35,6 @@ func (us *UserService) FindOrCreateWithEmail(ctx context.Context, req *model.Use
 	return nil
 }
 
-func NewUserService(data *data.Data) *UserService {
-	return &UserService{data}
+func NewUserService(data *data.Data, jwt *jwt.JWT) *UserService {
+	return &UserService{data, jwt}
 }

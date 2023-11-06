@@ -12,6 +12,7 @@ import (
 	"github.com/kalougata/bookkeeping/internal/server"
 	"github.com/kalougata/bookkeeping/internal/service"
 	"github.com/kalougata/bookkeeping/pkg/config"
+	"github.com/kalougata/bookkeeping/pkg/jwt"
 )
 
 // Injectors from wire.go:
@@ -21,7 +22,8 @@ func NewApp(conf *config.Config) (*server.Server, func(), error) {
 	if err != nil {
 		return nil, nil, err
 	}
-	userService := service.NewUserService(dataData)
+	jwtJWT := jwt.New(conf)
+	userService := service.NewUserService(dataData, jwtJWT)
 	authController := controller.NewAuthController(userService)
 	tagService := service.NewTagService(dataData)
 	tagController := controller.NewTagController(tagService)
