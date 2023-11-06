@@ -32,3 +32,7 @@ func (jm *JWTMiddleware) JWTAuth() fiber.Handler {
 		return ctx.Next()
 	}
 }
+
+func NewJWTMiddleware(jwt *myJwt.JWT) *JWTMiddleware {
+	return &JWTMiddleware{jwt}
+}

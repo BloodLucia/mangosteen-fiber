@@ -13,6 +13,7 @@ import (
 	"github.com/kalougata/bookkeeping/internal/service"
 	"github.com/kalougata/bookkeeping/pkg/config"
 	"github.com/kalougata/bookkeeping/pkg/jwt"
+	"github.com/kalougata/bookkeeping/pkg/middleware"
 )
 
 // Injectors from wire.go:
@@ -29,7 +30,8 @@ func NewApp(conf *config.Config) (*server.Server, func(), error) {
 	tagController := controller.NewTagController(tagService)
 	itemService := service.NewItemService(dataData)
 	itemController := controller.NewItemController(itemService)
-	app := server.NewHTTPServer(authController, tagController, itemController)
+	jwtMiddleware := middleware.NewJWTMiddleware(jwtJWT)
+	app := server.NewHTTPServer(authController, tagController, itemController, jwtMiddleware)
 	serverServer := server.NewServer(app)
 	return serverServer, func() {
 		cleanup()
