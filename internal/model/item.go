@@ -17,9 +17,9 @@ func (i *Item) TableName() string {
 }
 
 type ItemInReq struct {
-	Amount int `json:"amount"`
-	TagId  int `json:"tagId"`
-	UserId int `json:"userId"`
+	Amount int `json:"amount" validate:"int"`
+	TagId  int `json:"tagId" validate:"int"`
+	UserId int `json:"userId" validate:"int"`
 }
 
 func (u *ItemInReq) ToModel() *Item {

@@ -17,3 +17,7 @@ func ErrUnauthorized() *Error {
 func ErrFormatJSON() *Error {
 	return New(http.StatusUnprocessableEntity, "ErrFormatJSON")
 }
+
+func ErrForbidden() *Error {
+	return New(http.StatusForbidden, "ErrForbidden")
+}

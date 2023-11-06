@@ -23,7 +23,7 @@ func NewHTTPServer(
 		noAuthGroup.Post("/sendVerificationCode", authC.SendVerificationCode())
 	}
 
-	authGroup := v1Group.Group("").Use(jm.JWTAuth())
+	authGroup := v1Group.Group("").Use(jm.JWTAuth()).Use(jm.CheckUser())
 	{
 		authGroup.Get("/ping", func(ctx *fiber.Ctx) error {
 			return ctx.SendString("pong!")

@@ -33,6 +33,21 @@ func (jm *JWTMiddleware) JWTAuth() fiber.Handler {
 	}
 }
 
+func (jm *JWTMiddleware) CheckUser() fiber.Handler {
+	return func(ctx *fiber.Ctx) error {
+		userId := ctx.Get("userId")
+		accessUserId := ctx.Get("accessId")
+		if goutil.IsEqual("", userId) {
+			return response.Handle(ctx, e.ErrUnauthorized(), nil)
+		}
+		if !goutil.IsEqual(accessUserId, userId) {
+			return response.Handle(ctx, e.ErrForbidden(), nil)
+		}
+
+		return ctx.Next()
+	}
+}
+
 func NewJWTMiddleware(jwt *myJwt.JWT) *JWTMiddleware {
 	return &JWTMiddleware{jwt}
 }
