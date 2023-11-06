@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"fmt"
+	"github.com/gookit/goutil"
 	"github.com/kalougata/bookkeeping/internal/data"
 	"github.com/kalougata/bookkeeping/internal/model"
 	"github.com/kalougata/bookkeeping/pkg/e"
@@ -27,7 +28,7 @@ func (us *UserService) FindOrCreateWithEmail(ctx context.Context, req *model.Use
 	user := &model.User{}
 	//// 1. 从redis获取验证码
 	val := us.data.Cache.Get(ctx, req.Email).Val()
-	if val == "" || val != req.VerificationCode {
+	if goutil.IsEqual(val, "") || !goutil.IsEqual(val, req.VerificationCode) {
 		return nil, e.ErrBadRequest().WithMsg("验证码错误或已失效")
 	}
 
