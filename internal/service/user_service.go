@@ -8,6 +8,7 @@ import (
 	"github.com/kalougata/bookkeeping/pkg/e"
 	"github.com/kalougata/bookkeeping/pkg/jwt"
 	"log"
+	"time"
 )
 
 type UserService struct {
@@ -15,16 +16,19 @@ type UserService struct {
 	jwt  *jwt.JWT
 }
 
+func (us *UserService) SendVerificationCode(ctx context.Context, req *model.UserSendEmailReq) (err error) {
+	if err = us.data.Cache.Set(ctx, req.Email, "123456", time.Minute*5).Err(); err != nil {
+		return e.ErrInternalServer().WithMsg("发送验证码失败, 请稍后再试~").WithErr(err)
+	}
+	return nil
+}
+
 func (us *UserService) FindOrCreateWithEmail(ctx context.Context, req *model.UserInReq) (*model.UserOutRes, error) {
 	user := &model.User{}
 	//// 1. 从redis获取验证码
-	//val := us.data.Cache.Get(ctx, req.Email).Val()
-	//if val == "" || val != req.VerificationCode {
-	//	return nil, e.ErrBadRequest().WithMsg("验证码错误或已失效")
-	//}
-
-	if req.VerificationCode != "123456" {
-		return nil, e.ErrBadRequest().WithMsg("验证码错误或已过期")
+	val := us.data.Cache.Get(ctx, req.Email).Val()
+	if val == "" || val != req.VerificationCode {
+		return nil, e.ErrBadRequest().WithMsg("验证码错误或已失效")
 	}
 
 	// 2. 查询用户

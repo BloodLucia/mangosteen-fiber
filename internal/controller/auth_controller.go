@@ -26,6 +26,20 @@ func (ac *AuthController) SignInWithEmail() fiber.Handler {
 	}
 }
 
+func (ac *AuthController) SendVerificationCode() fiber.Handler {
+	return func(ctx *fiber.Ctx) error {
+		data := &model.UserSendEmailReq{}
+		if err := validator.Checker(ctx, data); err != nil {
+			return response.Handle(ctx, err, nil)
+		}
+		if err := ac.srv.SendVerificationCode(ctx.Context(), data); err != nil {
+			return response.Handle(ctx, err, nil)
+		}
+
+		return response.Handle(ctx, nil, "请查看邮箱")
+	}
+}
+
 func NewAuthController(srv *service.UserService) *AuthController {
 	return &AuthController{srv}
 }

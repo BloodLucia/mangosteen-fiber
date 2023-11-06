@@ -18,5 +18,7 @@ func NewHTTPServer(
 
 	app.Post("/login", authC.SignInWithEmail())
 
+	app.Post("/sendVerificationCode", authC.SendVerificationCode())
+
 	return app
 }
