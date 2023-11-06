@@ -7,12 +7,12 @@ type User struct {
 	CreatedAt time.Time `xorm:"created TIMESTAMP created_at"`
 	UpdatedAt time.Time `xorm:"updated TIMESTAMP updated_at"`
 	DeletedAt time.Time `xorm:"deleted DATETIME deleted_at"`
-	Email     string
+	Email     string    `xorm:"not null VARCHAR(100) unique index email"`
 }
 
 type UserInReq struct {
-	VerificationCode string `json:"verificationCode"`
-	Email            string `json:"email"`
+	VerificationCode string `json:"verificationCode" validate:"required|minLen:6|maxLen:6" message:"required:{field} 必填|minLen:{field} 验证码长度是6个字符|maxLen:{field} 验证码长度是6个字符"`
+	Email            string `json:"email" validate:"required|email" message:"required:{field} 必填|email:{field} 邮箱格式错误"`
 }
 
 type UserOutRes struct {
