@@ -40,6 +40,12 @@ func (ac *AuthController) SendVerificationCode() fiber.Handler {
 	}
 }
 
+func (ac *AuthController) Ping() fiber.Handler {
+	return func(ctx *fiber.Ctx) error {
+		return response.Handle(ctx, nil, ctx.GetRespHeader("userId"))
+	}
+}
+
 func NewAuthController(srv *service.UserService) *AuthController {
 	return &AuthController{srv}
 }

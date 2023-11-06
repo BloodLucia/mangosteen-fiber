@@ -21,7 +21,7 @@ type TagInReq struct {
 	Name   string `json:"name"`
 	Type   string `json:"type"`
 	Sign   string `json:"sign"`
-	UserId uint64 `json:"userId"`
+	UserId string `json:"userId"`
 }
 
 func (u *TagInReq) ToModel() *Tag {

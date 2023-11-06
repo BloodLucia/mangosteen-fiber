@@ -19,15 +19,13 @@ func NewHTTPServer(
 	noAuthGroup := v1Group.Group("")
 	{
 		noAuthGroup.Post("/login", authC.SignInWithEmail())
-
 		noAuthGroup.Post("/sendVerificationCode", authC.SendVerificationCode())
 	}
 
-	authGroup := v1Group.Group("").Use(jm.JWTAuth()).Use(jm.CheckUser())
+	authGroup := v1Group.Group("").Use(jm.JWTAuth())
 	{
-		authGroup.Get("/ping", func(ctx *fiber.Ctx) error {
-			return ctx.SendString("pong!")
-		})
+		authGroup.Get("/ping", authC.Ping())
+		authGroup.Post("/tag/create", tagC.Create())
 	}
 
 	return app

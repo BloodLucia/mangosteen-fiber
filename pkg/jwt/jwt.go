@@ -22,7 +22,7 @@ func New(conf *config.Config) *JWT {
 }
 
 type MyCustomClaims struct {
-	UserId uint64
+	UserId string
 
 	jwt.RegisteredClaims
 }

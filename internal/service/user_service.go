@@ -38,7 +38,7 @@ func (us *UserService) FindOrCreateWithEmail(ctx context.Context, req *model.Use
 		return nil, e.ErrInternalServer().WithErr(err)
 	}
 
-	claims := jwt.MyCustomClaims{UserId: user.ID}
+	claims := jwt.MyCustomClaims{UserId: goutil.String(user.ID)}
 	token, _ := us.jwt.BuildToken(claims)
 	resp := &model.UserOutRes{
 		UserId: user.ID,
