@@ -28,11 +28,11 @@ type ItemInReq struct {
 }
 
 type ItemListReq struct {
-	HappenedAfter  string
-	HappenedBefore string
-	Page           int
-	Limit          int
-	UserId         uint64
+	HappenedAfter  string `query:"happened_after"`
+	HappenedBefore string `query:"happened_before"`
+	Page           int    `query:"page"`
+	Limit          int    `query:"limit"`
+	UserId         uint64 `query:"user_id"`
 }
 
 func (u *ItemInReq) ToModel() *Item {

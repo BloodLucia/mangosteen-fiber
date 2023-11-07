@@ -33,17 +33,13 @@ func (ic *ItemController) Create() fiber.Handler {
 
 func (ic *ItemController) List() fiber.Handler {
 	return func(ctx *fiber.Ctx) error {
-		queries := ctx.Queries()
-		//after, _ := time.Parse("2006-01-02", queries["happened_after"])
-		//before, _ := time.Parse("2006-01-02", queries["happened_before"])
-		data := &model.ItemListReq{
-			HappenedAfter:  queries["happened_after"],
-			HappenedBefore: queries["happened_before"],
-			Page:           goutil.Int(queries["page"]),
-			Limit:          goutil.Int(queries["limit"]),
-			UserId:         goutil.Uint(ctx.GetRespHeader("userId")),
+		query := &model.ItemListReq{
+			UserId: goutil.Uint(ctx.GetRespHeader("userId")),
 		}
-		list, err := ic.service.List(ctx.Context(), data)
+		if err := ctx.QueryParser(query); err != nil {
+			return response.Handle(ctx, e.ErrBadRequest().WithErr(err), nil)
+		}
+		list, err := ic.service.List(ctx.Context(), query)
 		if err != nil {
 			return response.Handle(ctx, e.ErrInternalServer().WithErr(err), nil)
 		}
