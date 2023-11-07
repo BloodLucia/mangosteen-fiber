@@ -22,6 +22,8 @@ func NewData(conf *config.Config) (*Data, func(), error) {
 		Cache: cache,
 	}
 
+	db.ShowSQL(true)
+
 	return data, func() {
 		if err := db.Close(); err != nil {
 			log.Fatalf("Failed to close database: %s \n", err)
