@@ -17,12 +17,9 @@ type TagController struct {
 func (tc *TagController) Create() fiber.Handler {
 	return func(ctx *fiber.Ctx) error {
 		data := &model.TagInReq{}
-		userId := ctx.Get("userId")
+		userId := ctx.GetRespHeader("userId")
 		if goutil.IsEmpty(userId) {
 			return response.Handle(ctx, e.ErrUnauthorized(), nil)
-		}
-		if !goutil.IsEqual(userId, data.UserId) {
-			return response.Handle(ctx, e.ErrForbidden(), nil)
 		}
 		if err := validator.Checker(ctx, data); err != nil {
 			return response.Handle(ctx, err, nil)
