@@ -6,13 +6,14 @@ import (
 )
 
 type Item struct {
-	ID        uint64    `xorm:"not null pk autoincr BIGINT(20) id"`
-	CreatedAt time.Time `xorm:"created TIMESTAMP created_at"`
-	UpdatedAt time.Time `xorm:"updated TIMESTAMP updated_at"`
-	Amount    int
-	Type      string
-	TagId     uint64
-	UserId    uint64
+	ID         uint64    `xorm:"not null pk autoincr BIGINT(20) id"`
+	CreatedAt  time.Time `xorm:"created TIMESTAMP created_at"`
+	UpdatedAt  time.Time `xorm:"updated TIMESTAMP updated_at"`
+	Amount     int
+	Type       string
+	TagId      uint64
+	UserId     uint64
+	HappenedAt string
 }
 
 func (i *Item) TableName() string {
@@ -24,6 +25,14 @@ type ItemInReq struct {
 	Type   string `json:"type"`
 	TagId  string `json:"tagId"`
 	UserId string `json:"userId"`
+}
+
+type ItemListReq struct {
+	HappenedAfter  string
+	HappenedBefore string
+	Page           int
+	Limit          int
+	UserId         uint64
 }
 
 func (u *ItemInReq) ToModel() *Item {
