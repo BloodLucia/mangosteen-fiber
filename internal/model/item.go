@@ -9,11 +9,11 @@ type Item struct {
 	ID         uint64    `xorm:"not null pk autoincr BIGINT(20) id"`
 	CreatedAt  time.Time `xorm:"created TIMESTAMP created_at"`
 	UpdatedAt  time.Time `xorm:"updated TIMESTAMP updated_at"`
-	Amount     int
-	Type       string
-	TagId      uint64
-	UserId     uint64
-	HappenedAt string
+	Amount     int       `json:"amount"`
+	Type       string    `json:"type"`
+	TagId      uint64    `json:"tag_id"`
+	UserId     uint64    `json:"user_id"`
+	HappenedAt string    `json:"happened_at"`
 }
 
 func (i *Item) TableName() string {
@@ -32,7 +32,7 @@ type ItemListReq struct {
 	HappenedBefore string `query:"happened_before"`
 	Page           int    `query:"page"`
 	Limit          int    `query:"limit"`
-	UserId         uint64 `query:"user_id"`
+	UserId         uint64 `query:"-"`
 }
 
 func (u *ItemInReq) ToModel() *Item {

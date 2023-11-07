@@ -33,9 +33,7 @@ func (ic *ItemController) Create() fiber.Handler {
 
 func (ic *ItemController) List() fiber.Handler {
 	return func(ctx *fiber.Ctx) error {
-		query := &model.ItemListReq{
-			UserId: goutil.Uint(ctx.GetRespHeader("userId")),
-		}
+		query := &model.ItemListReq{UserId: goutil.Uint(ctx.GetRespHeader("userId"))}
 		if err := ctx.QueryParser(query); err != nil {
 			return response.Handle(ctx, e.ErrBadRequest().WithErr(err), nil)
 		}
