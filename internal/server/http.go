@@ -28,8 +28,10 @@ func NewHTTPServer(
 		authGroup.Post("/tag/create", tagC.Create())
 		authGroup.Get("/tag/list", tagC.List())
 
-		authGroup.Post("/item/create", itemC.Create())
 		authGroup.Get("/items", itemC.List())
+		authGroup.Post("/items/create", itemC.Create())
+
+		authGroup.Get("/balance", itemC.Balance())
 	}
 
 	return app

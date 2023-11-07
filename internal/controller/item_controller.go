@@ -3,11 +3,13 @@ package controller
 import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/gookit/goutil"
+	"github.com/kalougata/bookkeeping/internal/dto"
 	"github.com/kalougata/bookkeeping/internal/model"
 	"github.com/kalougata/bookkeeping/internal/service"
 	"github.com/kalougata/bookkeeping/pkg/e"
 	"github.com/kalougata/bookkeeping/pkg/response"
 	"github.com/kalougata/bookkeeping/pkg/validator"
+	"net/http"
 )
 
 type ItemController struct {
@@ -16,7 +18,7 @@ type ItemController struct {
 
 func (ic *ItemController) Create() fiber.Handler {
 	return func(ctx *fiber.Ctx) error {
-		data := &model.ItemInReq{}
+		data := &model.ItemInReq{UserId: ctx.GetRespHeader("userId")}
 		if err := validator.Checker(ctx, data); err != nil {
 			return response.Handle(ctx, err, nil)
 		}
@@ -43,6 +45,21 @@ func (ic *ItemController) List() fiber.Handler {
 		}
 
 		return response.Handle(ctx, nil, list)
+	}
+}
+
+func (ic *ItemController) Balance() fiber.Handler {
+	return func(ctx *fiber.Ctx) error {
+		queries := &dto.BalanceQueries{}
+		if err := ctx.QueryParser(queries); err != nil {
+			return response.Handle(ctx, e.New(http.StatusUnprocessableEntity, err.Error()), nil)
+		}
+		resp, err := ic.service.Balance(ctx.Context(), queries)
+		if err != nil {
+			return response.Handle(ctx, err, nil)
+		}
+
+		return response.Handle(ctx, nil, resp)
 	}
 }
 
