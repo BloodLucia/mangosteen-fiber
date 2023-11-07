@@ -1,15 +1,18 @@
 package model
 
-import "time"
+import (
+	"github.com/gookit/goutil"
+	"time"
+)
 
 type Item struct {
 	ID        uint64    `xorm:"not null pk autoincr BIGINT(20) id"`
 	CreatedAt time.Time `xorm:"created TIMESTAMP created_at"`
 	UpdatedAt time.Time `xorm:"updated TIMESTAMP updated_at"`
-	DeletedAt time.Time `xorm:"deleted DATETIME deleted_at"`
 	Amount    int
-	TagId     int
-	UserId    int
+	Type      string
+	TagId     uint64
+	UserId    uint64
 }
 
 func (i *Item) TableName() string {
@@ -17,15 +20,16 @@ func (i *Item) TableName() string {
 }
 
 type ItemInReq struct {
-	Amount int `json:"amount" validate:"int"`
-	TagId  int `json:"tagId" validate:"int"`
-	UserId int `json:"userId" validate:"int"`
+	Amount int    `json:"amount" validate:"int"`
+	Type   string `json:"type"`
+	TagId  string `json:"tagId"`
+	UserId string `json:"userId"`
 }
 
 func (u *ItemInReq) ToModel() *Item {
 	return &Item{
 		Amount: u.Amount,
-		TagId:  u.TagId,
-		UserId: u.UserId,
+		TagId:  goutil.Uint(u.TagId),
+		UserId: goutil.Uint(u.UserId),
 	}
 }

@@ -27,6 +27,8 @@ func NewHTTPServer(
 		authGroup.Get("/ping", authC.Ping())
 		authGroup.Post("/tag/create", tagC.Create())
 		authGroup.Get("/tag/list", tagC.List())
+
+		authGroup.Post("/item/create", itemC.Create())
 	}
 
 	return app
