@@ -32,6 +32,21 @@ func (tc *TagController) Create() fiber.Handler {
 	}
 }
 
+func (tc *TagController) List() fiber.Handler {
+	return func(ctx *fiber.Ctx) error {
+		userId := ctx.Query("userId")
+		if !goutil.IsEqual(userId, ctx.GetRespHeader("userId")) {
+			return response.Handle(ctx, e.ErrForbidden(), nil)
+		}
+		list, err := tc.srv.List(ctx.Context(), userId)
+		if err != nil {
+			return response.Handle(ctx, e.ErrInternalServer().WithErr(err), nil)
+		}
+
+		return response.Handle(ctx, nil, list)
+	}
+}
+
 func NewTagController(srv *service.TagService) *TagController {
 	return &TagController{srv}
 }

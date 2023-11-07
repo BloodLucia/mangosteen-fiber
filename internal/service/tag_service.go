@@ -22,6 +22,13 @@ func (ts *TagService) Create(ctx context.Context, req *model.TagInReq) error {
 	return nil
 }
 
+func (ts *TagService) List(ctx context.Context, userId string) (list []*model.Tag, err error) {
+	list = make([]*model.Tag, 0)
+	err = ts.data.DB.Context(ctx).Table(&model.Tag{}).Where("user_id = ?", userId).Find(&list)
+
+	return
+}
+
 func NewTagService(data *data.Data) *TagService {
 	return &TagService{data}
 }
