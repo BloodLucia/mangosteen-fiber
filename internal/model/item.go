@@ -6,14 +6,14 @@ import (
 )
 
 type Item struct {
-	ID         uint64    `xorm:"not null pk autoincr BIGINT(20) id" json:"id"`
-	Amount     int       `json:"amount"`
-	Type       string    `json:"type"`
-	TagId      uint64    `json:"tag_id"`
-	UserId     uint64    `json:"user_id"`
-	HappenedAt string    `json:"happened_at"`
-	CreatedAt  time.Time `xorm:"created TIMESTAMP created_at" json:"-"`
-	UpdatedAt  time.Time `xorm:"updated TIMESTAMP updated_at" json:"-"`
+	ID         uint64    `json:"id" xorm:"not null pk autoincr BIGINT(20) id"`
+	Amount     int       `json:"amount" xorm:"not null DECIMAL(10,2) amount"`
+	Kind       string    `json:"type" xorm:"not null VARCHAR(10) kind"`
+	TagId      uint64    `json:"tag_id" xorm:"not null BIGINT(20) tag_id"`
+	UserId     uint64    `json:"user_id" xorm:"not null BIGINT(20) user_id"`
+	HappenedAt string    `json:"happened_at" xorm:"not null DATETIME happened_at"`
+	CreatedAt  time.Time `json:"-" xorm:"created TIMESTAMP created_at"`
+	UpdatedAt  time.Time `json:"-" xorm:"updated TIMESTAMP updated_at"`
 }
 
 func (i *Item) TableName() string {

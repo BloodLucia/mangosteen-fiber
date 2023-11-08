@@ -9,10 +9,10 @@ type Tag struct {
 	ID        uint64    `xorm:"not null pk autoincr BIGINT(20) id"`
 	CreatedAt time.Time `xorm:"created TIMESTAMP created_at"`
 	UpdatedAt time.Time `xorm:"updated TIMESTAMP updated_at"`
-	Name      string
-	Type      string
-	Sign      string
-	UserId    uint64
+	Name      string    `xorm:"not null VARCHAR(30) name"`
+	Kind      string    `xorm:"not null VARCHAR(10) kind"`
+	Sign      string    `xorm:"not null CHAR(1) sign"`
+	UserId    uint64    `xorm:"not null BIGINT(20) user_id"`
 }
 
 func (u *Tag) TableName() string {
@@ -29,7 +29,7 @@ type TagInReq struct {
 func (u *TagInReq) ToModel() *Tag {
 	return &Tag{
 		Name:   u.Name,
-		Type:   u.Type,
+		Kind:   u.Type,
 		Sign:   u.Sign,
 		UserId: goutil.Uint(u.UserId),
 	}
