@@ -10,7 +10,7 @@ type Item struct {
 	Kind       string    `json:"type" xorm:"not null VARCHAR(10) kind"`
 	TagId      uint64    `json:"tag_id" xorm:"not null BIGINT(20) tag_id"`
 	UserId     uint64    `json:"user_id" xorm:"not null BIGINT(20) user_id"`
-	HappenedAt string    `json:"happened_at" xorm:"not null DATETIME happened_at"`
+	HappenedAt time.Time `json:"happened_at" xorm:"not null DATETIME happened_at"`
 	CreatedAt  time.Time `json:"-" xorm:"created TIMESTAMP created_at"`
 	UpdatedAt  time.Time `json:"-" xorm:"updated TIMESTAMP updated_at"`
 }

@@ -9,6 +9,7 @@ import (
 	"github.com/kalougata/bookkeeping/pkg/response"
 	"github.com/kalougata/bookkeeping/pkg/validator"
 	"net/http"
+	"time"
 )
 
 type ItemController struct {
@@ -17,7 +18,10 @@ type ItemController struct {
 
 func (ic *ItemController) Create() fiber.Handler {
 	return func(ctx *fiber.Ctx) error {
-		data := &dto.ItemInBody{UserId: ctx.GetRespHeader("userId")}
+		data := &dto.ItemInBody{
+			UserId:     ctx.GetRespHeader("userId"),
+			HappenedAt: time.Now().Local(),
+		}
 		if err := validator.Checker(ctx, data); err != nil {
 			return response.Handle(ctx, err, nil)
 		}
