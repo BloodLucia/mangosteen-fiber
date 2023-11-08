@@ -19,7 +19,6 @@ type ItemController struct {
 func (ic *ItemController) Create() fiber.Handler {
 	return func(ctx *fiber.Ctx) error {
 		data := &dto.ItemInBody{
-			UserId:     ctx.GetRespHeader("userId"),
 			HappenedAt: time.Now().Local(),
 		}
 		if err := validator.Checker(ctx, data); err != nil {
