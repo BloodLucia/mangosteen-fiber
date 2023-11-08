@@ -13,11 +13,11 @@ type ItemService struct {
 	data *data.Data
 }
 
-func (is *ItemService) Create(ctx context.Context, req *model.ItemInReq) (int64, error) {
+func (is *ItemService) Create(ctx context.Context, req *dto.ItemInBody) (int64, error) {
 	return is.data.DB.Context(ctx).Table(&model.Item{}).Insert(req.ToModel())
 }
 
-func (is *ItemService) List(ctx context.Context, req *model.ItemListReq) (*page.Page[*model.Item], error) {
+func (is *ItemService) List(ctx context.Context, req *dto.ItemListQueries) (*page.Page[*model.Item], error) {
 	list := make([]*model.Item, 0)
 	err := is.data.DB.Context(ctx).Table(&model.Item{}).Where("user_id = ? AND happened_at >= ? AND happened_at <= ?", req.UserId, req.HappenedAfter, req.HappenedBefore).Limit(10, req.Page).Find(&list)
 	if err != nil {

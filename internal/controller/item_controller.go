@@ -4,7 +4,6 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/gookit/goutil"
 	"github.com/kalougata/bookkeeping/internal/dto"
-	"github.com/kalougata/bookkeeping/internal/model"
 	"github.com/kalougata/bookkeeping/internal/service"
 	"github.com/kalougata/bookkeeping/pkg/e"
 	"github.com/kalougata/bookkeeping/pkg/response"
@@ -18,7 +17,7 @@ type ItemController struct {
 
 func (ic *ItemController) Create() fiber.Handler {
 	return func(ctx *fiber.Ctx) error {
-		data := &model.ItemInReq{UserId: ctx.GetRespHeader("userId")}
+		data := &dto.ItemInBody{UserId: ctx.GetRespHeader("userId")}
 		if err := validator.Checker(ctx, data); err != nil {
 			return response.Handle(ctx, err, nil)
 		}
@@ -35,7 +34,7 @@ func (ic *ItemController) Create() fiber.Handler {
 
 func (ic *ItemController) List() fiber.Handler {
 	return func(ctx *fiber.Ctx) error {
-		query := &model.ItemListReq{UserId: goutil.Uint(ctx.GetRespHeader("userId"))}
+		query := &dto.ItemListQueries{UserId: ctx.GetRespHeader("userId")}
 		if err := ctx.QueryParser(query); err != nil {
 			return response.Handle(ctx, e.ErrBadRequest().WithErr(err), nil)
 		}

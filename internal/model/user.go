@@ -14,7 +14,7 @@ type UserSendEmailReq struct {
 }
 
 type UserInReq struct {
-	VerificationCode string `json:"verificationCode" validate:"required|minLen:6|maxLen:6" message:"required:{field} 必填|minLen:{field} 验证码长度是6个字符|maxLen:{field} 验证码长度是6个字符"`
+	VerificationCode string `json:"verification_code" validate:"required|minLen:6|maxLen:6" message:"required:{field} 必填|minLen:{field} 验证码长度是6个字符|maxLen:{field} 验证码长度是6个字符"`
 	Email            string `json:"email" validate:"required|email" message:"required:{field} 必填|email:{field} 邮箱格式错误"`
 }
 
