@@ -2,6 +2,7 @@ package controller
 
 import (
 	"github.com/gofiber/fiber/v2"
+	"github.com/kalougata/bookkeeping/internal/dto"
 	"github.com/kalougata/bookkeeping/internal/model"
 	"github.com/kalougata/bookkeeping/internal/service"
 	"github.com/kalougata/bookkeeping/pkg/response"
@@ -9,16 +10,16 @@ import (
 )
 
 type AuthController struct {
-	srv *service.UserService
+	service *service.UserService
 }
 
 func (ac *AuthController) SignInWithEmail() fiber.Handler {
 	return func(ctx *fiber.Ctx) error {
-		data := &model.UserInReq{}
+		data := &dto.UserInBody{}
 		if err := validator.Checker(ctx, data); err != nil {
 			return response.Handle(ctx, err, nil)
 		}
-		if resp, err := ac.srv.FindOrCreateWithEmail(ctx.Context(), data); err != nil {
+		if resp, err := ac.service.FindOrCreate(ctx.Context(), data); err != nil {
 			return response.Handle(ctx, err, nil)
 		} else {
 			return response.Handle(ctx, nil, resp)
@@ -32,7 +33,7 @@ func (ac *AuthController) SendVerificationCode() fiber.Handler {
 		if err := validator.Checker(ctx, data); err != nil {
 			return response.Handle(ctx, err, nil)
 		}
-		if err := ac.srv.SendVerificationCode(ctx.Context(), data); err != nil {
+		if err := ac.service.SendVerificationCode(ctx.Context(), data); err != nil {
 			return response.Handle(ctx, err, nil)
 		}
 

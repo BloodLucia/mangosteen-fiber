@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/gookit/goutil"
 	"github.com/kalougata/bookkeeping/internal/data"
+	"github.com/kalougata/bookkeeping/internal/dto"
 	"github.com/kalougata/bookkeeping/internal/model"
 	"github.com/kalougata/bookkeeping/pkg/e"
 	"github.com/kalougata/bookkeeping/pkg/jwt"
@@ -24,7 +25,7 @@ func (us *UserService) SendVerificationCode(ctx context.Context, req *model.User
 	return nil
 }
 
-func (us *UserService) FindOrCreateWithEmail(ctx context.Context, req *model.UserInReq) (*model.UserOutRes, error) {
+func (us *UserService) FindOrCreate(ctx context.Context, req *dto.UserInBody) (*model.UserOutRes, error) {
 	user := &model.User{}
 	//// 1. 从redis获取验证码
 	val := us.data.Cache.Get(ctx, req.Email).Val()
