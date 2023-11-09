@@ -6,7 +6,7 @@ type BalanceQueries struct {
 	UserId         string `query:"-"`
 }
 
-type BalanceResponse struct {
+type BalanceRespBody struct {
 	Income   float64 `json:"income"`
 	Expenses float64 `json:"expenses"`
 	Balance  float64 `json:"balance"`

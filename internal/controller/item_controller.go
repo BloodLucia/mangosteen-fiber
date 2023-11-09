@@ -69,7 +69,7 @@ func (ic *ItemController) Balance() fiber.Handler {
 			return response.Handle(ctx, e.ErrInternalServer().WithErr(err), nil)
 		}
 
-		resp := &dto.BalanceResponse{
+		resp := &dto.BalanceRespBody{
 			Income:   income,
 			Expenses: expenses,
 			Balance:  income - expenses,
