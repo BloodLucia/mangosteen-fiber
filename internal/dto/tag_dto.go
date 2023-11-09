@@ -12,6 +12,12 @@ type TagInBody struct {
 	UserId string `json:"userId" validate:"required" message:"required:{field} 必填"`
 }
 
+type TagListQueries struct {
+	Kind   string `query:"kind"`
+	Page   int    `query:"page"`
+	UserId string `query:"-"`
+}
+
 func (body *TagInBody) ToModel() *model.Tag {
 	return &model.Tag{
 		Name:   body.Name,

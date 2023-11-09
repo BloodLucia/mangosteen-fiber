@@ -8,6 +8,7 @@ import (
 	"github.com/kalougata/bookkeeping/pkg/e"
 	"github.com/kalougata/bookkeeping/pkg/response"
 	"github.com/kalougata/bookkeeping/pkg/validator"
+	"net/http"
 )
 
 type TagController struct {
@@ -35,10 +36,14 @@ func (tc *TagController) Create() fiber.Handler {
 func (tc *TagController) List() fiber.Handler {
 	return func(ctx *fiber.Ctx) error {
 		userId := ctx.Query("userId")
+		queries := &dto.TagListQueries{}
+		if err := ctx.QueryParser(queries); err != nil {
+			return response.Handle(ctx, e.New(http.StatusUnprocessableEntity, err.Error()), nil)
+		}
 		if !goutil.IsEqual(userId, ctx.GetRespHeader("userId")) {
 			return response.Handle(ctx, e.ErrForbidden(), nil)
 		}
-		list, err := tc.service.List(ctx.Context(), userId)
+		list, err := tc.service.List(ctx.Context(), queries)
 		if err != nil {
 			return response.Handle(ctx, e.ErrInternalServer().WithErr(err), nil)
 		}
