@@ -31,7 +31,7 @@ func NewApp(conf *config.Config) (*server.Server, func(), error) {
 	itemService := service.NewItemService(dataData)
 	itemController := controller.NewItemController(itemService)
 	jwtMiddleware := middleware.NewJWTMiddleware(jwtJWT)
-	app := server.NewHTTPServer(authController, tagController, itemController, jwtMiddleware)
+	app := server.NewHTTPServer(authController, tagController, itemController, jwtMiddleware, conf)
 	serverServer := server.NewServer(app)
 	return serverServer, func() {
 		cleanup()

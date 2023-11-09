@@ -3,6 +3,7 @@ package data
 import (
 	"context"
 	"fmt"
+	_ "github.com/go-sql-driver/mysql"
 	"github.com/gofiber/fiber/v2/log"
 	"github.com/kalougata/bookkeeping/pkg/config"
 	"github.com/redis/go-redis/v9"
