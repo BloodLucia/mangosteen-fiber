@@ -1,7 +1,6 @@
 package model
 
 import (
-	"github.com/gookit/goutil"
 	"time"
 )
 
@@ -17,20 +16,4 @@ type Tag struct {
 
 func (u *Tag) TableName() string {
 	return "t_tags"
-}
-
-type TagInReq struct {
-	Name   string `json:"name"`
-	Type   string `json:"type"`
-	Sign   string `json:"sign"`
-	UserId string `json:"userId"`
-}
-
-func (u *TagInReq) ToModel() *Tag {
-	return &Tag{
-		Name:   u.Name,
-		Kind:   u.Type,
-		Sign:   u.Sign,
-		UserId: goutil.Uint(u.UserId),
-	}
 }

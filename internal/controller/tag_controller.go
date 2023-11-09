@@ -3,7 +3,7 @@ package controller
 import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/gookit/goutil"
-	"github.com/kalougata/bookkeeping/internal/model"
+	"github.com/kalougata/bookkeeping/internal/dto"
 	"github.com/kalougata/bookkeeping/internal/service"
 	"github.com/kalougata/bookkeeping/pkg/e"
 	"github.com/kalougata/bookkeeping/pkg/response"
@@ -11,12 +11,12 @@ import (
 )
 
 type TagController struct {
-	srv *service.TagService
+	service *service.TagService
 }
 
 func (tc *TagController) Create() fiber.Handler {
 	return func(ctx *fiber.Ctx) error {
-		data := &model.TagInReq{}
+		data := &dto.TagInBody{}
 		userId := ctx.GetRespHeader("userId")
 		if goutil.IsEmpty(userId) {
 			return response.Handle(ctx, e.ErrUnauthorized(), nil)
@@ -24,7 +24,7 @@ func (tc *TagController) Create() fiber.Handler {
 		if err := validator.Checker(ctx, data); err != nil {
 			return response.Handle(ctx, err, nil)
 		}
-		if err := tc.srv.Create(ctx.Context(), data); err != nil {
+		if err := tc.service.Create(ctx.Context(), data); err != nil {
 			return response.Handle(ctx, err, nil)
 		}
 
@@ -38,7 +38,7 @@ func (tc *TagController) List() fiber.Handler {
 		if !goutil.IsEqual(userId, ctx.GetRespHeader("userId")) {
 			return response.Handle(ctx, e.ErrForbidden(), nil)
 		}
-		list, err := tc.srv.List(ctx.Context(), userId)
+		list, err := tc.service.List(ctx.Context(), userId)
 		if err != nil {
 			return response.Handle(ctx, e.ErrInternalServer().WithErr(err), nil)
 		}

@@ -18,14 +18,14 @@ type UserService struct {
 	jwt  *jwt.JWT
 }
 
-func (us *UserService) SendVerificationCode(ctx context.Context, req *model.UserSendEmailReq) (err error) {
+func (us *UserService) SendVerificationCode(ctx context.Context, req *dto.UserEmailBody) (err error) {
 	if err = us.data.Cache.Set(ctx, req.Email, "123456", time.Minute*5).Err(); err != nil {
 		return e.ErrInternalServer().WithMsg("发送验证码失败, 请稍后再试~").WithErr(err)
 	}
 	return nil
 }
 
-func (us *UserService) FindOrCreate(ctx context.Context, req *dto.UserInBody) (*model.UserOutRes, error) {
+func (us *UserService) FindOrCreate(ctx context.Context, req *dto.UserInBody) (*dto.UserOutBody, error) {
 	user := &model.User{}
 	//// 1. 从redis获取验证码
 	val := us.data.Cache.Get(ctx, req.Email).Val()
@@ -41,7 +41,7 @@ func (us *UserService) FindOrCreate(ctx context.Context, req *dto.UserInBody) (*
 
 	claims := jwt.MyCustomClaims{UserId: goutil.String(user.ID)}
 	token, _ := us.jwt.BuildToken(claims)
-	resp := &model.UserOutRes{
+	resp := &dto.UserOutBody{
 		UserId: user.ID,
 		Email:  user.Email,
 		Token:  token,

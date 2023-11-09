@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"github.com/kalougata/bookkeeping/internal/data"
+	"github.com/kalougata/bookkeeping/internal/dto"
 	"github.com/kalougata/bookkeeping/internal/model"
 	"github.com/kalougata/bookkeeping/pkg/e"
 )
@@ -11,7 +12,7 @@ type TagService struct {
 	data *data.Data
 }
 
-func (ts *TagService) Create(ctx context.Context, req *model.TagInReq) error {
+func (ts *TagService) Create(ctx context.Context, req *dto.TagInBody) error {
 	if exist, err := ts.data.DB.Context(ctx).Table(&model.Tag{}).Where("name = ? AND type = ?", req.Name, req.Type).Exist(); exist && err == nil {
 		return e.ErrBadRequest().WithMsg("标签名已存在~")
 	}

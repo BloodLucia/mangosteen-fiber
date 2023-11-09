@@ -3,7 +3,6 @@ package controller
 import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/kalougata/bookkeeping/internal/dto"
-	"github.com/kalougata/bookkeeping/internal/model"
 	"github.com/kalougata/bookkeeping/internal/service"
 	"github.com/kalougata/bookkeeping/pkg/response"
 	"github.com/kalougata/bookkeeping/pkg/validator"
@@ -29,7 +28,7 @@ func (ac *AuthController) SignInWithEmail() fiber.Handler {
 
 func (ac *AuthController) SendVerificationCode() fiber.Handler {
 	return func(ctx *fiber.Ctx) error {
-		data := &model.UserSendEmailReq{}
+		data := &dto.UserEmailBody{}
 		if err := validator.Checker(ctx, data); err != nil {
 			return response.Handle(ctx, err, nil)
 		}
