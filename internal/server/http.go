@@ -3,6 +3,7 @@ package server
 import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/kalougata/bookkeeping/internal/controller"
+	"github.com/kalougata/bookkeeping/pkg/config"
 	"github.com/kalougata/bookkeeping/pkg/middleware"
 )
 
@@ -11,8 +12,13 @@ func NewHTTPServer(
 	tagC *controller.TagController,
 	itemC *controller.ItemController,
 	jm *middleware.JWTMiddleware,
+	conf *config.Config,
 ) *fiber.App {
-	app := fiber.New()
+	app := fiber.New(fiber.Config{
+		AppName:       conf.APP.Name,
+		StrictRouting: true,
+		CaseSensitive: true,
+	})
 
 	v1Group := app.Group("/api/v1")
 
