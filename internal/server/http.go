@@ -25,11 +25,20 @@ func NewHTTPServer(
 	authGroup := v1Group.Group("").Use(jm.JWTAuth())
 	{
 		authGroup.Get("/ping", authC.Ping())
-		authGroup.Post("/tag/create", tagC.Create())
-		authGroup.Get("/tag/list", tagC.List())
 
-		authGroup.Get("/items", itemC.List())
-		authGroup.Post("/items/create", itemC.Create())
+		// 标签路由
+		tagsGroup := authGroup.Group("/tags")
+		{
+			tagsGroup.Get("", tagC.List())
+			tagsGroup.Post("/create", tagC.Create())
+		}
+
+		// 账单路由
+		itemsGroup := authGroup.Group("/items")
+		{
+			itemsGroup.Get("", itemC.List())
+			itemsGroup.Post("/create", itemC.Create())
+		}
 
 		authGroup.Get("/balance", itemC.Balance())
 	}
