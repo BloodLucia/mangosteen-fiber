@@ -53,12 +53,26 @@ func (ic *ItemController) List() fiber.Handler {
 func (ic *ItemController) Balance() fiber.Handler {
 	return func(ctx *fiber.Ctx) error {
 		queries := &dto.BalanceQueries{}
+		userId := goutil.Uint(ctx.GetRespHeader("userId"))
 		if err := ctx.QueryParser(queries); err != nil {
 			return response.Handle(ctx, e.New(http.StatusUnprocessableEntity, err.Error()), nil)
 		}
-		resp, err := ic.service.Balance(ctx.Context(), queries)
+
+		var income float64
+		var expenses float64
+		var err error
+
+		income, err = ic.service.GetTotalAmountByIncome(ctx.Context(), userId)
+		expenses, err = ic.service.GetTotalAmountByExpenses(ctx.Context(), userId)
+
 		if err != nil {
-			return response.Handle(ctx, err, nil)
+			return response.Handle(ctx, e.ErrInternalServer().WithErr(err), nil)
+		}
+
+		resp := &dto.BalanceResponse{
+			Income:   income,
+			Expenses: expenses,
+			Balance:  income - expenses,
 		}
 
 		return response.Handle(ctx, nil, resp)
