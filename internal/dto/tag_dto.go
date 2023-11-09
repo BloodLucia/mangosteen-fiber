@@ -7,7 +7,7 @@ import (
 
 type TagInBody struct {
 	Name   string `json:"name" validate:"required" message:"required:{field} 必填"`
-	Kind   string `json:"type" validate:"required|enum:income,expenses" message:"required:{field} 必填|enum:{field} 必须是income或者expenses"`
+	Kind   string `json:"kind" validate:"required|enum:income,expenses" message:"required:{field} 必填|enum:{field} 必须是income或者expenses"`
 	Sign   string `json:"sign" validate:"required" message:"required:{field} 必填"`
 	UserId string `json:"userId" validate:"required" message:"required:{field} 必填"`
 }
