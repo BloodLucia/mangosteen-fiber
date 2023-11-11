@@ -37,7 +37,7 @@ func (ac *AuthController) SendVerificationCode() fiber.Handler {
 			return response.Handle(ctx, err, nil)
 		}
 
-		return response.Handle(ctx, nil, "请查看邮箱")
+		return response.Handle(ctx, nil, nil)
 	}
 }
 
