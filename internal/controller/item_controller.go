@@ -61,14 +61,11 @@ func (ic *ItemController) Balance() fiber.Handler {
 		var income float64
 		var expenses float64
 		var err error
-
 		income, err = ic.service.GetTotalAmountByIncome(ctx.Context(), userId)
 		expenses, err = ic.service.GetTotalAmountByExpenses(ctx.Context(), userId)
-
 		if err != nil {
 			return response.Handle(ctx, e.ErrInternalServer().WithErr(err), nil)
 		}
-
 		resp := &dto.BalanceRespBody{
 			Income:   income,
 			Expenses: expenses,
