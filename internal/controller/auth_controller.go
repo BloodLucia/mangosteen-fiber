@@ -18,11 +18,12 @@ func (ac *AuthController) SignInWithEmail() fiber.Handler {
 		if err := validator.Checker(ctx, data); err != nil {
 			return response.Handle(ctx, err, nil)
 		}
-		if resp, err := ac.service.FindOrCreate(ctx.Context(), data); err != nil {
+		resp, err := ac.service.FindOrCreate(ctx.Context(), data)
+		if err != nil {
 			return response.Handle(ctx, err, nil)
-		} else {
-			return response.Handle(ctx, nil, resp)
 		}
+
+		return response.Handle(ctx, nil, resp)
 	}
 }
 
