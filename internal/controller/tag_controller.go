@@ -19,7 +19,7 @@ func (tc *TagController) Create() fiber.Handler {
 	return func(ctx *fiber.Ctx) error {
 		data := &dto.TagInBody{}
 		userId := ctx.GetRespHeader("userId")
-		if goutil.IsEmpty(userId) {
+		if !goutil.IsEqual(data.UserId, userId) {
 			return response.Handle(ctx, e.ErrUnauthorized(), nil)
 		}
 		if err := validator.Checker(ctx, data); err != nil {
@@ -35,13 +35,14 @@ func (tc *TagController) Create() fiber.Handler {
 
 func (tc *TagController) List() fiber.Handler {
 	return func(ctx *fiber.Ctx) error {
-		userId := ctx.Query("userId")
+		userId := ctx.GetRespHeader("userId")
 		queries := &dto.TagListQueries{}
+		if goutil.IsEmpty(userId) {
+			return response.Handle(ctx, e.ErrUnauthorized(), nil)
+		}
+		queries.UserId = userId
 		if err := ctx.QueryParser(queries); err != nil {
 			return response.Handle(ctx, e.New(http.StatusUnprocessableEntity, err.Error()), nil)
-		}
-		if !goutil.IsEqual(userId, ctx.GetRespHeader("userId")) {
-			return response.Handle(ctx, e.ErrForbidden(), nil)
 		}
 		list, err := tc.service.List(ctx.Context(), queries)
 		if err != nil {
