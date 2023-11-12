@@ -29,7 +29,7 @@ func (us *UserService) FindOrCreate(ctx context.Context, req *dto.UserInBody) (*
 	user := &model.User{}
 	//// 1. 从redis获取验证码
 	val := us.data.Cache.Get(ctx, req.Email).Val()
-	if goutil.IsEqual(val, "") || !goutil.IsEqual(val, req.VerificationCode) {
+	if goutil.IsEmpty(val) || !goutil.IsEqual(val, req.VerificationCode) {
 		return nil, e.ErrBadRequest().WithMsg("验证码错误或已失效")
 	}
 
