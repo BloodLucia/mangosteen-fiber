@@ -13,6 +13,7 @@ import (
 	"github.com/kalougata/bookkeeping/internal/service"
 	"github.com/kalougata/bookkeeping/pkg/config"
 	"github.com/kalougata/bookkeeping/pkg/jwt"
+	"github.com/kalougata/bookkeeping/pkg/mailer"
 	"github.com/kalougata/bookkeeping/pkg/middleware"
 )
 
@@ -24,7 +25,8 @@ func NewApp(conf *config.Config) (*server.Server, func(), error) {
 		return nil, nil, err
 	}
 	jwtJWT := jwt.New(conf)
-	userService := service.NewUserService(dataData, jwtJWT)
+	mailerMailer := mailer.NewMailer(conf)
+	userService := service.NewUserService(dataData, jwtJWT, mailerMailer)
 	authController := controller.NewAuthController(userService)
 	tagService := service.NewTagService(dataData)
 	tagController := controller.NewTagController(tagService)

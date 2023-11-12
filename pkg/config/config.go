@@ -6,17 +6,19 @@ import (
 )
 
 type Config struct {
-	DB  *configs.Database
-	RDB *configs.Redis
-	JWT *configs.JWT
-	APP *configs.App
+	DB     *configs.Database
+	RDB    *configs.Redis
+	JWT    *configs.JWT
+	APP    *configs.App
+	Mailer *configs.Mailer
 }
 
 func NewConfig() *Config {
 	return &Config{
-		DB:  configs.DatabaseConfig(),
-		RDB: configs.RedisConfig(),
-		JWT: configs.JWTConfig(),
-		APP: configs.AppConfig(),
+		DB:     configs.DatabaseConfig(),
+		RDB:    configs.RedisConfig(),
+		JWT:    configs.JWTConfig(),
+		APP:    configs.AppConfig(),
+		Mailer: configs.MailerConfig(),
 	}
 }

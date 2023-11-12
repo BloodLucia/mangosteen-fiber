@@ -9,16 +9,26 @@ import (
 	"github.com/kalougata/bookkeeping/internal/model"
 	"github.com/kalougata/bookkeeping/pkg/e"
 	"github.com/kalougata/bookkeeping/pkg/jwt"
+	"github.com/kalougata/bookkeeping/pkg/mailer"
 	"log"
 	"time"
 )
 
 type UserService struct {
-	data *data.Data
-	jwt  *jwt.JWT
+	data   *data.Data
+	jwt    *jwt.JWT
+	mailer *mailer.Mailer
 }
 
 func (us *UserService) SendVerificationCode(ctx context.Context, req *dto.UserEmailBody) (err error) {
+	options := &mailer.MailOptions{
+		To:      req.Email,
+		Subject: "邮箱验证码",
+		Text:    fmt.Sprintf("您的验证码为：%s，五分钟后过期。", "123456"),
+	}
+	if err := us.mailer.Send(options); err != nil {
+		return e.ErrInternalServer().WithErr(err)
+	}
 	if err = us.data.Cache.Set(ctx, req.Email, "123456", time.Minute*5).Err(); err != nil {
 		return e.ErrInternalServer().WithMsg("发送验证码失败, 请稍后再试~").WithErr(err)
 	}
@@ -65,6 +75,6 @@ func (us *UserService) FindOrCreate(ctx context.Context, req *dto.UserInBody) (*
 	return resp, nil
 }
 
-func NewUserService(data *data.Data, jwt *jwt.JWT) *UserService {
-	return &UserService{data, jwt}
+func NewUserService(data *data.Data, jwt *jwt.JWT, mailer *mailer.Mailer) *UserService {
+	return &UserService{data, jwt, mailer}
 }
