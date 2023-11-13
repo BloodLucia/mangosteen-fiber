@@ -21,7 +21,7 @@ type UserService struct {
 }
 
 func (us *UserService) SendVerificationCode(ctx context.Context, req *dto.UserEmailBody) (err error) {
-	options := &mailer.MailOptions{
+	options := &mailer.Options{
 		To:      req.Email,
 		Subject: "邮箱验证码",
 		Text:    fmt.Sprintf("您的验证码为：%s，五分钟后过期。", "123456"),

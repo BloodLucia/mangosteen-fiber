@@ -7,7 +7,7 @@ import (
 	"net/smtp"
 )
 
-type MailOptions struct {
+type Options struct {
 	To      string
 	Subject string
 	Text    string
@@ -17,7 +17,7 @@ type Mailer struct {
 	conf *config.Config
 }
 
-func (m *Mailer) Send(options *MailOptions) error {
+func (m *Mailer) Send(options *Options) error {
 	e := email.NewEmail()
 	e.From = m.conf.Mailer.From
 	e.To = []string{options.To}
