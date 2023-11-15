@@ -14,7 +14,7 @@ type TagService struct {
 }
 
 func (ts *TagService) Create(ctx context.Context, req *dto.TagInBody) error {
-	if exist, err := ts.data.DB.Context(ctx).Table(&model.Tag{}).Where("name = ? AND type = ?", req.Name, req.Kind).Exist(); exist && err == nil {
+	if exist, err := ts.data.DB.Context(ctx).Table(&model.Tag{}).Where("name = ? AND kind = ?", req.Name, req.Kind).Exist(); exist && err == nil {
 		return e.ErrBadRequest().WithMsg("标签名已存在~")
 	}
 	if count, err := ts.data.DB.Context(ctx).Table(&model.Tag{}).Insert(req.ToModel()); err != nil || count <= 0 {
