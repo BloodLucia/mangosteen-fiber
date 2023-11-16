@@ -2,6 +2,7 @@ package server
 
 import (
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/kalougata/bookkeeping/internal/controller"
 	"github.com/kalougata/bookkeeping/pkg/config"
 	"github.com/kalougata/bookkeeping/pkg/middleware"
@@ -20,7 +21,7 @@ func NewHTTPServer(
 		CaseSensitive: true,
 	})
 
-	v1Group := app.Group("/api/v1")
+	v1Group := app.Group("/api/v1").Use(cors.New())
 
 	noAuthGroup := v1Group.Group("")
 	{
