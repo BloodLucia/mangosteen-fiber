@@ -19,7 +19,7 @@ type JWTMiddleware struct {
 func (jm *JWTMiddleware) JWTAuth() fiber.Handler {
 	return func(ctx *fiber.Ctx) error {
 		tokenString := ctx.Get("Authorization")
-		if goutil.IsEqual(tokenString, "") {
+		if goutil.IsEmpty(tokenString) {
 			return response.Handle(ctx, e.ErrUnauthorized(), nil)
 		}
 		claims, err := jm.jwt.ParseToken(tokenString)
