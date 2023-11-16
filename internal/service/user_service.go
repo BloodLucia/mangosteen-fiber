@@ -21,16 +21,17 @@ type UserService struct {
 }
 
 func (us *UserService) SendVerificationCode(ctx context.Context, req *dto.UserEmailBody) (err error) {
+	tmpCode := "123456"
 	options := &mailer.Options{
 		To:      req.Email,
 		Subject: "邮箱验证码",
-		Text:    fmt.Sprintf("您的验证码为：%s，五分钟后过期。", "123456"),
+		Text:    fmt.Sprintf("您的验证码为：%s，五分钟后过期。", tmpCode),
 	}
 	if err := us.mailer.Send(options); err != nil {
-		return e.ErrInternalServer().WithErr(err)
-	}
-	if err = us.data.Cache.Set(ctx, req.Email, "123456", time.Minute*5).Err(); err != nil {
 		return e.ErrInternalServer().WithMsg("发送验证码失败, 请稍后再试~").WithErr(err)
+	}
+	if err = us.data.Cache.Set(ctx, req.Email, tmpCode, time.Minute*5).Err(); err != nil {
+		return e.ErrInternalServer().WithErr(err)
 	}
 	return nil
 }
