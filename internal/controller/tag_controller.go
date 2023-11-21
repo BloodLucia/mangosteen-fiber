@@ -37,9 +37,6 @@ func (tc *TagController) List() fiber.Handler {
 	return func(ctx *fiber.Ctx) error {
 		userId := ctx.GetRespHeader("userId")
 		queries := &dto.TagListQueries{}
-		if goutil.IsEmpty(userId) {
-			return response.Handle(ctx, e.ErrUnauthorized(), nil)
-		}
 		queries.UserId = userId
 		if err := ctx.QueryParser(queries); err != nil {
 			return response.Handle(ctx, e.New(http.StatusUnprocessableEntity, err.Error()), nil)
