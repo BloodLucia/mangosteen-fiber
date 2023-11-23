@@ -20,17 +20,17 @@ type UserService struct {
 	mailer *mailer.Mailer
 }
 
-func (us *UserService) SendVerificationCode(ctx context.Context, req *dto.UserEmailBody) (err error) {
+func (us *UserService) SendVerificationCode(ctx context.Context, email string) (err error) {
 	tmpCode := "123456"
 	options := &mailer.Options{
-		To:      req.Email,
+		To:      email,
 		Subject: "邮箱验证码",
 		Text:    fmt.Sprintf("您的验证码为：%s，五分钟后过期。", tmpCode),
 	}
 	if err := us.mailer.Send(options); err != nil {
 		return e.ErrInternalServer().WithMsg("发送验证码失败, 请稍后再试~").WithErr(err)
 	}
-	if err = us.data.Cache.Set(ctx, req.Email, tmpCode, time.Minute*5).Err(); err != nil {
+	if err = us.data.Cache.Set(ctx, email, tmpCode, time.Minute*5).Err(); err != nil {
 		return e.ErrInternalServer().WithErr(err)
 	}
 	return nil

@@ -34,7 +34,7 @@ func (ac *AuthController) SendVerificationCode() fiber.Handler {
 		if err := validator.Checker(ctx, data); err != nil {
 			return response.Handle(ctx, err, nil)
 		}
-		if err := ac.service.SendVerificationCode(ctx.Context(), data); err != nil {
+		if err := ac.service.SendVerificationCode(ctx.Context(), data.Email); err != nil {
 			return response.Handle(ctx, err, nil)
 		}
 
