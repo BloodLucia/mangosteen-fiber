@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"fmt"
 	"github.com/gofiber/fiber/v2"
 	"github.com/kalougata/bookkeeping/internal/dto"
 	"github.com/kalougata/bookkeeping/internal/service"
@@ -43,7 +44,7 @@ func (ac *AuthController) SendVerificationCode() fiber.Handler {
 
 func (ac *AuthController) Ping() fiber.Handler {
 	return func(ctx *fiber.Ctx) error {
-		return response.Handle(ctx, nil, ctx.GetRespHeader("userId"))
+		return response.Handle(ctx, nil, fmt.Sprintf("用户ID: %v", ctx.GetRespHeader("userId")))
 	}
 }
 
