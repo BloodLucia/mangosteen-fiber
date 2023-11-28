@@ -3,6 +3,9 @@ package service
 import (
 	"context"
 	"fmt"
+	"log"
+	"time"
+
 	"github.com/gookit/goutil"
 	"github.com/kalougata/bookkeeping/internal/data"
 	"github.com/kalougata/bookkeeping/internal/dto"
@@ -10,8 +13,6 @@ import (
 	"github.com/kalougata/bookkeeping/pkg/e"
 	"github.com/kalougata/bookkeeping/pkg/jwt"
 	"github.com/kalougata/bookkeeping/pkg/mailer"
-	"log"
-	"time"
 )
 
 type UserService struct {
@@ -72,6 +73,24 @@ func (us *UserService) FindOrCreate(ctx context.Context, req *dto.UserInBody) (*
 		return resp, nil
 	}
 	log.Println(fmt.Sprintf("用户已存在：%s，直接颁发token", user.Email))
+
+	return resp, nil
+}
+
+func (us *UserService) GetCurrentUser(ctx context.Context, userId string) (*dto.UserProfileResp, error) {
+	user := &model.User{}
+	has, err := us.data.DB.Context(ctx).Table(&model.User{}).Where("id = ?", userId).Get(user)
+	if err != nil {
+		return nil, e.ErrInternalServer().WithErr(err)
+	}
+	if !has {
+		return nil, e.ErrUnauthorized()
+	}
+	resp := &dto.UserProfileResp{
+		UserId:    user.ID,
+		Email:     user.Email,
+		CreatedAt: user.CreatedAt.GoString(),
+	}
 
 	return resp, nil
 }

@@ -17,6 +17,12 @@ type UserOutBody struct {
 	Token  string `json:"token"`
 }
 
+type UserProfileResp struct {
+	Email     string `json:"email"`
+	UserId    uint64 `json:"user_id"`
+	CreatedAt string `json:"created_at"`
+}
+
 func (r *UserInBody) ToModel() *model.User {
 	return &model.User{
 		Email: r.Email,

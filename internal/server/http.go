@@ -32,6 +32,7 @@ func NewHTTPServer(
 	authGroup := v1Group.Group("").Use(jm.JWTAuth())
 	{
 		authGroup.Get("/ping", authC.Ping())
+		authGroup.Get("/me", authC.Me())
 
 		// 标签路由
 		tagsGroup := authGroup.Group("/tags")
